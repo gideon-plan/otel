@@ -1,6 +1,7 @@
 ## totel.nim -- Tests for OpenTelemetry tracing and metrics.
 {.experimental: "strict_funcs".}
 import std/[unittest, strutils, tables]
+import basis/code/choice
 import otel
 
 suite "span":
