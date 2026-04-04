@@ -4,6 +4,7 @@ breach
 ======
 Breach detection: access baselines, anomaly scoring, PHI monitoring, alerts.
 ]#
+{.experimental: "strictFuncs".}
 import basis/code/throw
 standard_pragmas(effects=false, rise=false)
 import std/[strutils, math]

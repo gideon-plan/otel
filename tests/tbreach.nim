@@ -1,3 +1,4 @@
+{.experimental: "strictFuncs".}
 import std/unittest
 import telemetry/breach
 suite "Access profile":
