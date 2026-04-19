@@ -6,11 +6,11 @@ import std/[times, tables]
 
 
 type
-  SpanStatus* = enum
-    ssUnset, ssOk, ssError
+  SpanStatus* {.pure.} = enum
+    Unset, Ok, Error
 
-  SpanKind* = enum
-    skInternal, skServer, skClient, skProducer, skConsumer
+  SpanKind* {.pure.} = enum
+    Internal, Server, Client, Producer, Consumer
 
   Span* = ref object
     trace_id*: string       ## 16-byte hex
@@ -31,10 +31,10 @@ type
     attributes*: Table[string, string]
 
 proc new_span*(name: string, trace_id, span_id: string,
-               parent: string = "", kind: SpanKind = skInternal): Span =
+               parent: string = "", kind: SpanKind = SpanKind.Internal): Span =
   Span(name: name, trace_id: trace_id, span_id: span_id,
        parent_span_id: parent, kind: kind,
-       start_time: now(), status: ssUnset)
+       start_time: now(), status: SpanStatus.Unset)
 
 proc finish*(s: Span) =
   s.end_time = now()

@@ -38,7 +38,7 @@ suite "PHI monitor":
 suite "Alerts":
   test "add and filter alerts":
     var log: AlertLog
-    log.addAlert(Alert(id: "1", alertType: atAnomalousAccess, severity: asCritical, userId: "u1", message: "spike"))
-    log.addAlert(Alert(id: "2", alertType: atOffHoursAccess, severity: asWarning, userId: "u2", message: "late"))
-    check getActiveAlerts(log, asCritical).len == 1
-    check getActiveAlerts(log, asWarning).len == 1
+    log.addAlert(Alert(id: "1", alertType: AlertType.AnomalousAccess, severity: AlertSeverity.Critical, userId: "u1", message: "spike"))
+    log.addAlert(Alert(id: "2", alertType: AlertType.OffHoursAccess, severity: AlertSeverity.Warning, userId: "u2", message: "late"))
+    check getActiveAlerts(log, AlertSeverity.Critical).len == 1
+    check getActiveAlerts(log, AlertSeverity.Warning).len == 1

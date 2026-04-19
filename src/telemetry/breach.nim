@@ -34,8 +34,8 @@ type
   PhiAccessLog* = object
     records*: seq[PhiAccessRecord]
     maxRecords*: int
-  AlertSeverity* = enum asInfo, asWarning, asCritical, asEmergency
-  AlertType* = enum atAnomalousAccess, atBulkExport, atOffHoursAccess, atFailedAuth
+  AlertSeverity* {.pure.} = enum Info, Warning, Critical, Emergency
+  AlertType* {.pure.} = enum AnomalousAccess, BulkExport, OffHoursAccess, FailedAuth
   Alert* = object
     id*: string
     alertType*: AlertType

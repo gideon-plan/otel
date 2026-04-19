@@ -9,7 +9,7 @@ suite "span":
     let s = new_span("test-op", "aabbccdd" & "aabbccdd" & "aabbccdd" & "aabbccdd",
                      "11223344" & "11223344")
     check s.name == "test-op"
-    check s.status == ssUnset
+    check s.status == SpanStatus.Unset
     s.finish()
     check s.duration_ms >= 0.0
 
@@ -26,8 +26,8 @@ suite "span":
 
   test "set status":
     let s = new_span("op", "t" & "0".repeat(31), "s" & "0".repeat(15))
-    s.set_status(ssError, "timeout")
-    check s.status == ssError
+    s.set_status(SpanStatus.Error, "timeout")
+    check s.status == SpanStatus.Error
     check s.status_message == "timeout"
 
 suite "meter":
