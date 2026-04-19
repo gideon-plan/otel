@@ -18,7 +18,7 @@ suite "Access profile":
 suite "PHI monitor":
   test "add records":
     var log = PhiAccessLog(maxRecords: 100)
-    log.addRecord(PhiAccessRecord(userId: "u1", resourceType: "Patient", timestamp: "2024-01-01T10:00:00Z"))
+    log.addRecord(PhiAccessRecord(userId: "u1", resourceType: "Patient", created: "2024-01-01T10:00:00Z"))
     check log.records.len == 1
   test "off hours":
     check isOffHours("2024-01-01T03:00:00Z")
@@ -26,19 +26,19 @@ suite "PHI monitor":
     check isOffHours("2024-01-01T22:00:00Z")
   test "count by user":
     var log: PhiAccessLog
-    log.addRecord(PhiAccessRecord(userId: "u1", timestamp: "t1"))
-    log.addRecord(PhiAccessRecord(userId: "u2", timestamp: "t2"))
-    log.addRecord(PhiAccessRecord(userId: "u1", timestamp: "t3"))
+    log.addRecord(PhiAccessRecord(userId: "u1", created: "t1"))
+    log.addRecord(PhiAccessRecord(userId: "u2", created: "t2"))
+    log.addRecord(PhiAccessRecord(userId: "u1", created: "t3"))
     check countByUser(log, "u1") == 2
   test "get off hours access":
     var log: PhiAccessLog
-    log.addRecord(PhiAccessRecord(userId: "u1", timestamp: "2024-01-01T03:00:00Z"))
-    log.addRecord(PhiAccessRecord(userId: "u1", timestamp: "2024-01-01T10:00:00Z"))
+    log.addRecord(PhiAccessRecord(userId: "u1", created: "2024-01-01T03:00:00Z"))
+    log.addRecord(PhiAccessRecord(userId: "u1", created: "2024-01-01T10:00:00Z"))
     check getOffHoursAccess(log).len == 1
 suite "Alerts":
   test "add and filter alerts":
     var log: AlertLog
-    log.addAlert(Alert(id: "1", alertType: AlertType.AnomalousAccess, severity: AlertSeverity.Critical, userId: "u1", message: "spike"))
-    log.addAlert(Alert(id: "2", alertType: AlertType.OffHoursAccess, severity: AlertSeverity.Warning, userId: "u2", message: "late"))
+    log.addAlert(Alert(id: "1", alertType: AlertKind.AnomalousAccess, severity: AlertSeverity.Critical, userId: "u1", message: "spike"))
+    log.addAlert(Alert(id: "2", alertType: AlertKind.OffHoursAccess, severity: AlertSeverity.Warning, userId: "u2", message: "late"))
     check getActiveAlerts(log, AlertSeverity.Critical).len == 1
     check getActiveAlerts(log, AlertSeverity.Warning).len == 1

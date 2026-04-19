@@ -29,20 +29,20 @@ type
     resourceType*: string
     resourceId*: string
     action*: string
-    timestamp*: string
+    created*: string
     sourceIp*: string
   PhiAccessLog* = object
     records*: seq[PhiAccessRecord]
     maxRecords*: int
   AlertSeverity* {.pure.} = enum Info, Warning, Critical, Emergency
-  AlertType* {.pure.} = enum AnomalousAccess, BulkExport, OffHoursAccess, FailedAuth
+  AlertKind* {.pure.} = enum AnomalousAccess, BulkExport, OffHoursAccess, FailedAuth
   Alert* = object
     id*: string
-    alertType*: AlertType
+    alertType*: AlertKind
     severity*: AlertSeverity
     userId*: string
     message*: string
-    timestamp*: string
+    created*: string
   AlertLog* = object
     alerts*: seq[Alert]
 
@@ -67,11 +67,11 @@ proc addRecord*(log: var PhiAccessLog, record: PhiAccessRecord) =
   if log.maxRecords > 0 and log.records.len > log.maxRecords:
     log.records.delete(0)
 
-func isOffHours*(timestamp: string, startHour: int = 7, endHour: int = 19): bool =
-  # Simple check: extract hour from ISO timestamp "...THH:..."
-  let tPos = timestamp.find('T')
-  if tPos >= 0 and timestamp.len > tPos + 2:
-    let hour = parseInt(timestamp[tPos+1 .. tPos+2])
+func isOffHours*(created: string, startHour: int = 7, endHour: int = 19): bool =
+  # Simple check: extract hour from ISO created "...THH:..."
+  let tPos = created.find('T')
+  if tPos >= 0 and created.len > tPos + 2:
+    let hour = parseInt(created[tPos+1 .. tPos+2])
     return hour < startHour or hour >= endHour
   false
 
@@ -81,7 +81,7 @@ func countByUser*(log: PhiAccessLog, userId: string): int =
 
 func getOffHoursAccess*(log: PhiAccessLog, startHour: int = 7, endHour: int = 19): seq[PhiAccessRecord] =
   for r in log.records:
-    if isOffHours(r.timestamp, startHour, endHour): result.add(r)
+    if isOffHours(r.created, startHour, endHour): result.add(r)
 
 func detectBulkExport*(log: PhiAccessLog, userId: string, threshold: int = 100): bool =
   countByUser(log, userId) >= threshold

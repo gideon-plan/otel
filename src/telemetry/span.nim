@@ -27,7 +27,7 @@ type
 
   SpanEvent* = object
     name*: string
-    timestamp*: DateTime
+    created*: DateTime
     attributes*: Table[string, string]
 
 proc new_span*(name: string, trace_id, span_id: string,
@@ -46,7 +46,7 @@ proc set_attribute*(s: Span, key, value: string) =
   s.attributes[key] = value
 
 proc add_event*(s: Span, name: string, attrs: Table[string, string] = initTable[string, string]()) =
-  s.events.add(SpanEvent(name: name, timestamp: now(), attributes: attrs))
+  s.events.add(SpanEvent(name: name, created: now(), attributes: attrs))
 
 proc duration_ms*(s: Span): float =
   let d = s.end_time - s.start_time
